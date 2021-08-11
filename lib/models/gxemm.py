@@ -1,10 +1,11 @@
 import functools
-
+import pdb
 import numpy as np
 import scipy.optimize as opt
 
 from ..models import utils
 
+EPS = 1e-12
 TOL = 1e-8
 MAX_PERM = 1e8
 NUM_NULL = 10
@@ -293,7 +294,7 @@ class Gxemm:
             xo = core.h.copy()
             args = (Y_, )
             if NONNEG_VC:
-                bounds = [(0, np.inf)]*xo.size
+                bounds = [(EPS, np.inf)]*xo.size
             else:
                 bounds = [(-np.inf, np.inf)]*xo.size
 
@@ -504,6 +505,12 @@ class Gxemm:
                 print("completed run %d; log likelihood = %.4f"%(r, log_likelihood))
             except ValueError:
                 pass
+
+        # remove any inf / nan
+        mask = ~(np.isnan(log_likelihoods) | np.isinf(log_likelihoods))
+        indices = np.where(mask)[0]
+        log_likelihoods = log_likelihoods[indices]
+        params = [params[i] for i in indices]
 
         # select estimate with highest log likelihood
         optimal_param = params[np.argmax(log_likelihoods)]
