@@ -285,7 +285,7 @@ class Gxemm:
 
         retry = 0
         success = False
-        while not success and retry < 3:
+        while not success and retry < 10:
             if retry > 0:
                 core = Core(X_, kinships)
             else:
