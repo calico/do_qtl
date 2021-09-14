@@ -47,11 +47,11 @@ def main():
     ##subsample for testing
     df = pd.read_csv(args.phenotype_file)
     test_samples = df['MouseID'].tolist()
-    test_samples = test_samples[::6] ##take every x sample -- ie every 4th
+    test_samples = test_samples[::4] ##take every x sample -- ie every 4th
 
     # subset to common samples
     io.intersect_datasets(genotype, phenotype, covariates, at_samples=test_samples)
-
+    print('n samples', genotype.N_samples)
     # subset to common samples
     #io.intersect_datasets(genoprob, phenotype, covariates)
 
